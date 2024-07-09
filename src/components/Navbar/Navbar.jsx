@@ -28,7 +28,7 @@ const Navbar = () => {
             }}
           />
         </div>
-        <div className={`${open ? "menu active" : "menu"}`}>
+        <div className={`menu ${open ? "active" : ""}`}>
           <a href="/">Home</a>
           <a href="/">About</a>
           <a href="/">Contact</a>
