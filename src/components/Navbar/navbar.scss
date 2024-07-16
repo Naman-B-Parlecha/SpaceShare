@@ -134,7 +134,7 @@ nav {
       height: 100vh;
       width: 50%;
       transition: all 1s ease;
-      display: none;
+      display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
@@ -142,7 +142,6 @@ nav {
 
       &.active {
         right: 0;
-        display: flex;
       }
 
       @include sm {

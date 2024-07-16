@@ -1,40 +1,37 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./slider.scss";
-const Slider = ({ images }) => {
+
+function Slider({ images }) {
   const [imageIndex, setImageIndex] = useState(null);
 
-  const changeSlide = (side) => {
-    if (side === "left") {
+  const changeSlide = (direction) => {
+    if (direction === "left") {
       if (imageIndex === 0) {
         setImageIndex(images.length - 1);
       } else {
-        setImageIndex((prev) => prev - 1);
+        setImageIndex(imageIndex - 1);
       }
     } else {
       if (imageIndex === images.length - 1) {
         setImageIndex(0);
       } else {
-        setImageIndex((prev) => prev + 1);
+        setImageIndex(imageIndex + 1);
       }
     }
   };
+
   return (
     <div className="slider">
       {imageIndex !== null && (
         <div className="fullSlider">
-          <div className="arrow">
-            <img src="/arrow.png" alt="" onClick={() => changeSlide("left")} />
+          <div className="arrow" onClick={() => changeSlide("left")}>
+            <img src="/arrow.png" alt="" />
           </div>
           <div className="imgContainer">
             <img src={images[imageIndex]} alt="" />
           </div>
-          <div className="arrow">
-            <img
-              src="/arrow.png"
-              alt=""
-              className="right"
-              onClick={() => changeSlide("right")}
-            />
+          <div className="arrow" onClick={() => changeSlide("right")}>
+            <img src="/arrow.png" className="right" alt="" />
           </div>
           <div className="close" onClick={() => setImageIndex(null)}>
             X
@@ -47,15 +44,15 @@ const Slider = ({ images }) => {
       <div className="smallImages">
         {images.slice(1).map((image, index) => (
           <img
-            key={index}
             src={image}
             alt=""
+            key={index}
             onClick={() => setImageIndex(index + 1)}
           />
         ))}
       </div>
     </div>
   );
-};
+}
 
 export default Slider;

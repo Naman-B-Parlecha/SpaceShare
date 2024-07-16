@@ -1,9 +1,9 @@
-import React from "react";
 import "./singlePage.scss";
-import Slider from "../../components/Slider/Slider";
-import { singlePostData, userData } from "../../lib/dummyData.js";
-import Map from "../../components/Map/Map.jsx";
-const SinglePage = () => {
+import Slider from "../../components/slider/Slider";
+import Map from "../../components/map/Map";
+import { singlePostData, userData } from "../../lib/dummydata";
+
+function SinglePage() {
   return (
     <div className="singlePage">
       <div className="details">
@@ -17,7 +17,7 @@ const SinglePage = () => {
                   <img src="/pin.png" alt="" />
                   <span>{singlePostData.address}</span>
                 </div>
-                <div className="price">${singlePostData.price}</div>
+                <div className="price">$ {singlePostData.price}</div>
               </div>
               <div className="user">
                 <img src={userData.img} alt="" />
@@ -35,7 +35,7 @@ const SinglePage = () => {
             <div className="feature">
               <img src="/utility.png" alt="" />
               <div className="featureText">
-                <span>Utilitizes</span>
+                <span>Utilities</span>
                 <p>Renter is responsible</p>
               </div>
             </div>
@@ -43,7 +43,7 @@ const SinglePage = () => {
               <img src="/pet.png" alt="" />
               <div className="featureText">
                 <span>Pet Policy</span>
-                <p>Pet Allowed</p>
+                <p>Pets Allowed</p>
               </div>
             </div>
             <div className="feature">
@@ -72,14 +72,14 @@ const SinglePage = () => {
           <p className="title">Nearby Places</p>
           <div className="listHorizontal">
             <div className="feature">
-              <img src="/fee.png" alt="" />
+              <img src="/school.png" alt="" />
               <div className="featureText">
                 <span>School</span>
-                <p>250m</p>
+                <p>250m away</p>
               </div>
             </div>
             <div className="feature">
-              <img src="/fee.png" alt="" />
+              <img src="/pet.png" alt="" />
               <div className="featureText">
                 <span>Bus Stop</span>
                 <p>100m away</p>
@@ -100,17 +100,17 @@ const SinglePage = () => {
           <div className="buttons">
             <button>
               <img src="/chat.png" alt="" />
-              Send a message
+              Send a Message
             </button>
             <button>
               <img src="/save.png" alt="" />
-              Save the place
+              Save the Place
             </button>
           </div>
         </div>
       </div>
     </div>
   );
-};
+}
 
 export default SinglePage;

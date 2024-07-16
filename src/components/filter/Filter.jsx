@@ -1,6 +1,6 @@
-import React from "react";
 import "./filter.scss";
-const Filter = () => {
+
+function Filter() {
   return (
     <div className="filter">
       <h1>
@@ -21,7 +21,7 @@ const Filter = () => {
         <div className="item">
           <label htmlFor="type">Type</label>
           <select name="type" id="type">
-            <option value="any">any</option>
+            <option value="">any</option>
             <option value="buy">Buy</option>
             <option value="rent">Rent</option>
           </select>
@@ -29,8 +29,8 @@ const Filter = () => {
         <div className="item">
           <label htmlFor="property">Property</label>
           <select name="property" id="property">
-            <option value="any">any</option>
-            <option value="appartment">Appartment</option>
+            <option value="">any</option>
+            <option value="apartment">Apartment</option>
             <option value="house">House</option>
             <option value="condo">Condo</option>
             <option value="land">Land</option>
@@ -48,7 +48,7 @@ const Filter = () => {
         <div className="item">
           <label htmlFor="maxPrice">Max Price</label>
           <input
-            type="number"
+            type="text"
             id="maxPrice"
             name="maxPrice"
             placeholder="any"
@@ -69,6 +69,6 @@ const Filter = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Filter;

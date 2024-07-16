@@ -8,14 +8,18 @@
     flex: 3;
 
     .wrapper {
-      display: flex;
       padding-right: 100px;
+      display: flex;
       flex-direction: column;
       justify-content: center;
       gap: 50px;
       height: 100%;
 
-      @include md {
+      @include lg{
+        padding-right: 50px;
+      }
+
+      @include md{
         padding: 0;
       }
 
@@ -25,10 +29,12 @@
 
       .title {
         font-size: 64px;
+
         @include lg {
-          font-style: 48px;
+          font-size: 48px;
         }
       }
+
       .boxes {
         display: flex;
         justify-content: space-between;
@@ -36,20 +42,23 @@
         @include sm {
           display: none;
         }
+
         h1 {
-          font: 36px;
+          font-size: 36px;
 
           @include lg {
-            font-style: 32px;
+            font-size: 32px;
           }
         }
+
         h2 {
-          font: 20px;
+          font-size: 20px;
           font-weight: 300;
         }
       }
     }
   }
+
   .imgContainer {
     flex: 2;
     background-color: #fcf5f3;
@@ -60,6 +69,7 @@
     @include md {
       display: none;
     }
+
     img {
       width: 115%;
       position: absolute;
