@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./login.scss";
 import { Link, useNavigate } from "react-router-dom";
-
+import apiRequest from "../../lib/apiRequest.js";
 function Login() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -21,10 +21,12 @@ function Login() {
         username,
         password,
       });
-      if (response.data.message !== "Login successful") {
+      if (!response.data) {
         throw new Error("Failed to login User");
       }
-      navigate("/login");
+
+      localStorage.setItem("user", JSON.stringify(response.data));
+      navigate("/");
     } catch (err) {
       const errorMessage = err.response?.data?.message || err.message;
       setError(errorMessage);
