@@ -84,6 +84,8 @@ nav {
       .profile {
         padding: 12px 24px;
         background-color: #fece51;
+        height: fit-content;
+        width: fit-content;
         cursor: pointer;
         border: none;
         position: relative;
@@ -124,6 +126,8 @@ nav {
     }
 
     .menu {
+      opacity: 0;
+      z-index: -100;
       position: absolute;
       top: 0;
       right: -50%;
@@ -132,13 +136,17 @@ nav {
       height: 100vh;
       width: 50%;
       transition: all 1s ease;
-      display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       font-size: 24px;
+      display: none;
 
       &.active {
+        transition: all 3s ease-in-out 0;
+        opacity: 1;
+        display: flex;
+        z-index: 100;
         right: 0;
       }
 
