@@ -1,12 +1,59 @@
+import { useState } from "react";
 import "./newPostPage.scss";
-
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import UploadWidget from "../../components/uploadWidget/UploadWidget";
+import apiRequest from "../../lib/apiRequest";
+import { useNavigate } from "react-router-dom";
 function NewPostPage() {
+  const navigate = useNavigate();
+  const [value, setValue] = useState("");
+  const [error, setError] = useState("");
+  const [images, setImages] = useState([]);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("")
+    const formData = new FormData(e.target);
+    const inputs = Object.fromEntries(formData);
+    console.log(inputs)
+    try {
+      const response = await apiRequest.post("/post", {
+        postData: {
+          title: inputs.title,
+          price: parseInt(inputs.price),
+          address: inputs.address,
+          city: inputs.city,
+          bedroom: parseInt(inputs.bedroom),
+          bathroom: parseInt(inputs.bathroom),
+          type: inputs.type,
+          property: inputs.property,
+          latitude: inputs.latitude,
+          longitude: inputs.longitude,
+          images: images,
+        },
+        postDetail: {
+          desc: value,
+          utilities: inputs.utilities,
+          pet: inputs.pet,
+          income: inputs.income,
+          size: parseInt(inputs.size),
+          school: parseInt(inputs.school),
+          bus: parseInt(inputs.bus),
+          restaurant: parseInt(inputs.restaurant),
+        },
+      });
+      console.log(response.data)
+      navigate(`/${response.data.id}`)
+    } catch (err) {
+      setError(err.response.data.message);
+    }
+  };
   return (
     <div className="newPostPage">
       <div className="formContainer">
         <h1>Add New Post</h1>
         <div className="wrapper">
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="item">
               <label htmlFor="title">Title</label>
               <input id="title" name="title" type="text" />
@@ -21,6 +68,7 @@ function NewPostPage() {
             </div>
             <div className="item description">
               <label htmlFor="desc">Description</label>
+              <ReactQuill theme="snow" value={value} onChange={setValue} />
             </div>
             <div className="item">
               <label htmlFor="city">City</label>
@@ -52,9 +100,9 @@ function NewPostPage() {
               </select>
             </div>
             <div className="item">
-              <label htmlFor="type">Property</label>
+              <label htmlFor="property">Property</label>
               <select name="property">
-                <option value="apartment">Apartment</option>
+                <option value="apartment" defaultChecked>Apartment</option>
                 <option value="house">House</option>
                 <option value="condo">Condo</option>
                 <option value="land">Land</option>
@@ -101,10 +149,24 @@ function NewPostPage() {
               <input min={0} id="restaurant" name="restaurant" type="number" />
             </div>
             <button className="sendButton">Add</button>
+            {error && <span>{error}</span>}
           </form>
         </div>
       </div>
-      <div className="sideContainer"></div>
+      <div className="sideContainer">
+        {images.map((image, index) => (
+          <img src={image} alt="" key={index} />
+        ))}
+        <UploadWidget
+          uwConfig={{
+            multiple: true,
+            cloudName: "dbpp99a5n",
+            uploadPreset: "projectEXO",
+            folder: "posts",
+          }}
+          setState={setImages}
+        />
+      </div>
     </div>
   );
 }
