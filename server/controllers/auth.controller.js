@@ -47,7 +47,7 @@ export const loginController = async (req, res, next) => {
 
     const { password: userPassword, ...userInfo } = user;
     res
-      .cookie("token", token, {
+      .cookie("userToken", token, {
         maxAge: age,
         httpOnly: true,
         // secure:false,
@@ -60,5 +60,5 @@ export const loginController = async (req, res, next) => {
   }
 };
 export const logoutController = (req, res, next) => {
-  res.clearCookie("token").status(200).json({ message: "Logout successful" });
+  res.clearCookie("userToken").status(200).json({ message: "Logout successful" });
 };

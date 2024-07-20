@@ -8,6 +8,7 @@ function List(){
       {listData.map(item=>(
         <Card key={item.id} item={item}/>
       ))}
+      <p>no posts</p>
     </div>
   )
 }
