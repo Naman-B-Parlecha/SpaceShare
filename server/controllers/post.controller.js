@@ -1,28 +1,29 @@
 import prisma from "../lib/prisma.js";
 
-export const getPosts = async (req, res, next) => {
+export const getPosts = async (req, res) => {
   const query = req.query;
-  console.log(query);
+
   try {
     const posts = await prisma.post.findMany({
       where: {
         city: query.city || undefined,
         type: query.type || undefined,
-        bedroom: parseInt(query.bedroom) || undefined,
         property: query.property || undefined,
+        bedroom: parseInt(query.bedroom) || undefined,
         price: {
-          gte: parseInt(query.minPrice) || 0,
-          lte: parseInt(query.maxPrice) || 1000000000000000,
+          gte: parseInt(query.minPrice) || undefined,
+          lte: parseInt(query.maxPrice) || undefined,
         },
       },
     });
-    setTimeout(() => {
-      console.log(posts);
-      res.status(200).json(posts);
-    }, 3000);
+
+    // setTimeout(() => {
+    console.log(posts);
+    res.status(200).json(posts);
+    // }, 3000);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: "Failed to fetch posts" });
+    res.status(500).json({ message: "Failed to get posts" });
   }
 };
 
@@ -87,6 +88,33 @@ export const deletePost = async (req, res, next) => {
     }
     const response = await prisma.post.delete({ where: { id } });
     res.status(200).json({ message: "Post deleted Successfully" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Failed to delete post" });
+  }
+};
+export const savePost = async (req, res, next) => {
+  const postId = req.body.postId;
+  const tokenId = req.userId;
+
+  try {
+    const savedPost = await prisma.savedPost.findUnique({
+      where: {
+        userId_postId: {
+          userId: tokenId,
+          postId,
+        },
+      },
+    });
+    if (savedPost) {
+      await prisma.savedPost.delete({ where: { id: savedPost.id } });
+      res.status(200).json({ message: "Removed Post from saved" });
+    } else {
+      await prisma.savedPost.create({
+        data: { postId: postId, userId: tokenId },
+      });
+      res.status(200).json({ message: "Added post to saved" });
+    }
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Failed to delete post" });

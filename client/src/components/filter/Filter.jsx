@@ -1,25 +1,29 @@
-import { useSearchParams } from "react-router-dom";
-import "./filter.scss";
 import { useState } from "react";
+import "./filter.scss";
+import { useSearchParams } from "react-router-dom";
 
 function Filter() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [query, setQuery] = useState({
-    city: searchParams.get("city") || "",
-    bedroom: searchParams.get("bedroom") || 1,
     type: searchParams.get("type") || "",
-    minPrice: searchParams.get("minPrice") || 0,
-    maxPrice: searchParams.get("maxPrice") || 10000000,
+    city: searchParams.get("city") || "",
     property: searchParams.get("property") || "",
+    minPrice: searchParams.get("minPrice") || "",
+    maxPrice: searchParams.get("maxPrice") || "",
+    bedroom: searchParams.get("bedroom") || "",
   });
 
   const handleChange = (e) => {
-    setQuery((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    setQuery({
+      ...query,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const handleFilter = () => {
     setSearchParams(query);
   };
+
   return (
     <div className="filter">
       <h1>
