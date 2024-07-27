@@ -4,6 +4,8 @@ import postRouter from "./routes/post.route.js";
 import authRouter from "./routes/auth.route.js";
 import testRouter from "./routes/test.route.js";
 import userRouter from "./routes/user.route.js";
+import chatRouter from "./routes/chat.route.js";
+import messageRouter from "./routes/message.route.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
@@ -19,6 +21,10 @@ app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 
 app.use("/api/test", testRouter);
+
+app.use("/api/chat", chatRouter);
+
+app.use("/api/message", messageRouter);
 
 app.listen(8080, () => {
   console.log("Connected to server!");

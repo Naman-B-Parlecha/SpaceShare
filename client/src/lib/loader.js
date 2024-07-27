@@ -2,7 +2,7 @@ import { defer } from "react-router-dom";
 import apiRequest from "./apiRequest";
 
 export const singlePostLoader = async ({ request, params }) => {
-  console.log(params.id)
+  console.log(params.id);
   const res = await apiRequest.get(`/post/${params.id}`);
   console.log(res.data);
   return res.data;
@@ -17,9 +17,11 @@ export const listPostLoader = async ({ request, params }) => {
   });
 };
 export const profilePageloader = async () => {
-  const res = await apiRequest.get(`/user/profilePosts`);
-  console.log(res)
+  const postRes = await apiRequest.get(`/user/profilePosts`);
+  const chatRes = await apiRequest.get(`/chat`);
+  // console.log(res);
   return defer({
-    postResponse: res,
+    postResponse: postRes,
+    chatResponse: chatRes,
   });
 };

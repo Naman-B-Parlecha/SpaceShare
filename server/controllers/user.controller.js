@@ -118,7 +118,7 @@ export const profilePost = async (req, res, next) => {
     });
 
     const usersavedPost = saved.map((item) => item.post);
-    console.log({ userPosts: userPost, savedPosts: usersavedPost })
+    // console.log({ userPosts: userPost, savedPosts: usersavedPost })
     res.status(200).json({ userPosts: userPost, savedPosts: usersavedPost });
   } catch (err) {
     console.log(err);

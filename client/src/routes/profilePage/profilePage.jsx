@@ -8,7 +8,7 @@ import { AuthContext } from "../../context/AuthContext";
 
 function ProfilePage() {
   const data = useLoaderData();
-  console.log(data)
+  console.log(data);
   const { updateUser, currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const handleLogout = async () => {
@@ -74,7 +74,7 @@ function ProfilePage() {
               errorElement={<p>failed to load posts</p>}
             >
               {(postResponse) => {
-                console.log(postResponse.data.savedPosts)
+                console.log(postResponse.data.savedPosts);
                 if (postResponse.data.savedPosts.length > 0) {
                   return <List posts={postResponse.data.savedPosts} />;
                 }
@@ -86,7 +86,17 @@ function ProfilePage() {
       </div>
       <div className="chatContainer">
         <div className="wrapper">
-          <Chat />
+          <Suspense fallback={<p>Loading...</p>}>
+            <Await
+              resolve={data.chatResponse}
+              errorElement={<p>failed to load posts</p>}
+            >
+              {(chatResponse) => {
+                console.log(chatResponse.data);
+                return <Chat chats={chatResponse.data} />;
+              }}
+            </Await>
+          </Suspense>
         </div>
       </div>
     </div>
