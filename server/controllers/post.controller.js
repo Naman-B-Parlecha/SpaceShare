@@ -1,5 +1,5 @@
 import prisma from "../lib/prisma.js";
-
+import jwt from "jsonwebtoken";
 export const getPosts = async (req, res) => {
   const query = req.query;
 
@@ -27,8 +27,9 @@ export const getPosts = async (req, res) => {
   }
 };
 
-export const getPost = async (req, res, next) => {
+export const getPost = async (req, res) => {
   const id = req.params.id;
+  console.log("here");
   try {
     const post = await prisma.post.findUnique({
       where: { id },
@@ -42,12 +43,33 @@ export const getPost = async (req, res, next) => {
         },
       },
     });
-    res.status(200).json(post);
+    const token = req.cookies?.userToken;
+    console.log(token);
+    if (token) {
+      jwt.verify(token, process.env.JWT_SECRET_KEY, async (err, payload) => {
+        if (!err) {
+          const saved = await prisma.savedPost.findUnique({
+            where: {
+              userId_postId: {
+                postId: id,
+                userId: payload.id,
+              },
+            },
+          });
+          return res.status(200).json({ ...post, isSaved: saved ? true : false });
+        } else {
+          return res.status(401).json({ message: "Invalid token" });
+        }
+      });
+    } else {
+      return res.status(200).json({ ...post, isSaved: false });
+    }
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: "Failed to fetch post" });
+    res.status(500).json({ message: "Failed to get post" });
   }
 };
+
 
 export const addPost = async (req, res, next) => {
   const body = req.body;
@@ -88,33 +110,6 @@ export const deletePost = async (req, res, next) => {
     }
     const response = await prisma.post.delete({ where: { id } });
     res.status(200).json({ message: "Post deleted Successfully" });
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: "Failed to delete post" });
-  }
-};
-export const savePost = async (req, res, next) => {
-  const postId = req.body.postId;
-  const tokenId = req.userId;
-
-  try {
-    const savedPost = await prisma.savedPost.findUnique({
-      where: {
-        userId_postId: {
-          userId: tokenId,
-          postId,
-        },
-      },
-    });
-    if (savedPost) {
-      await prisma.savedPost.delete({ where: { id: savedPost.id } });
-      res.status(200).json({ message: "Removed Post from saved" });
-    } else {
-      await prisma.savedPost.create({
-        data: { postId: postId, userId: tokenId },
-      });
-      res.status(200).json({ message: "Added post to saved" });
-    }
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Failed to delete post" });
