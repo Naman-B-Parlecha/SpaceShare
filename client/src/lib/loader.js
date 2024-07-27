@@ -16,3 +16,10 @@ export const listPostLoader = async ({ request, params }) => {
     postResponse: res,
   });
 };
+export const profilePageloader = async () => {
+  const res = await apiRequest.get(`/user/profilePosts`);
+  console.log(res)
+  return defer({
+    postResponse: res,
+  });
+};

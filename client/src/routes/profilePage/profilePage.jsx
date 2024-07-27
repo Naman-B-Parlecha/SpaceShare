@@ -1,12 +1,14 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Await, Link, useLoaderData, useNavigate } from "react-router-dom";
 import Chat from "../../components/chat/Chat";
 import List from "../../components/list/List";
 import apiRequest from "../../lib/apiRequest";
 import "./profilePage.scss";
-import { useContext } from "react";
+import { Suspense, useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 
 function ProfilePage() {
+  const data = useLoaderData();
+  console.log(data)
   const { updateUser, currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const handleLogout = async () => {
@@ -49,11 +51,37 @@ function ProfilePage() {
               <button>Create New Post</button>
             </Link>
           </div>
-          <List />
+
+          <Suspense fallback={<p>Loading...</p>}>
+            <Await
+              resolve={data.postResponse}
+              errorElement={<p>failed to load posts</p>}
+            >
+              {(postResponse) => {
+                if (postResponse.data.userPosts.length > 0) {
+                  return <List posts={postResponse.data.userPosts} />;
+                }
+                return <>You dont have any listing</>;
+              }}
+            </Await>
+          </Suspense>
           <div className="title">
             <h1>Saved List</h1>
           </div>
-          <List />
+          <Suspense fallback={<p>Loading...</p>}>
+            <Await
+              resolve={data.postResponse}
+              errorElement={<p>failed to load posts</p>}
+            >
+              {(postResponse) => {
+                console.log(postResponse.data.savedPosts)
+                if (postResponse.data.savedPosts.length > 0) {
+                  return <List posts={postResponse.data.savedPosts} />;
+                }
+                return <>You dont have any saved listing</>;
+              }}
+            </Await>
+          </Suspense>
         </div>
       </div>
       <div className="chatContainer">
