@@ -1,13 +1,21 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import "./chat.scss";
 import { AuthContext } from "../../context/AuthContext";
 import apiRequest from "../../lib/apiRequest";
 import { format } from "timeago.js";
+import { SocketContext } from "../../context/SocketContext";
 function Chat({ chats }) {
   const [chat, setChat] = useState(null);
   const { currentUser } = useContext(AuthContext);
+  const { socket } = useContext(SocketContext);
+  const messageEndRef = useRef();
+
+  useEffect(() => {
+    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chat]);
 
   const handleOpenChat = async (id, reciever) => {
+    // console.log(socket)
     try {
       const res = await apiRequest.get("/chat/" + id);
       setChat({ ...res.data, reciever });
@@ -31,10 +39,36 @@ function Chat({ chats }) {
       });
       setChat((prev) => ({ ...prev, messages: [...prev.messages, res.data] }));
       e.target.reset();
+      socket.emit("sendMessage", {
+        recieverId: chat.reciever.id,
+        data: res.data,
+      });
     } catch (err) {
       console.log(err);
     }
   };
+
+  useEffect(() => {
+    const read = async () => {
+      try {
+        await apiRequest.put(`/chat/read/${chat.id}`);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    if (socket && chat) {
+      socket.on("getMessage", (data) => {
+        if (chat.id === data.chatId) {
+          setChat((prev) => ({ ...prev, messages: [...prev.messages, data] }));
+          read();
+        }
+      });
+    }
+    return () => {
+      socket.off("getMessage");
+    };
+  }, [socket, chat]);
   return (
     <div className="chat">
       <div className="messages">
@@ -45,7 +79,9 @@ function Chat({ chats }) {
               className="message"
               key={c.id}
               style={{
-                backgroundColor: c.seenBy.includes(currentUser.id)
+                backgroundColor: c.seenBy.includes(
+                  currentUser.id || chat.id === c.id
+                )
                   ? "white"
                   : "#fecd514e",
               }}
@@ -89,6 +125,7 @@ function Chat({ chats }) {
                 </div>
               );
             })}
+            <div ref={messageEndRef}></div>
           </div>
           <form onSubmit={handleSubmit} className="bottom">
             <textarea name="text" id="text"></textarea>
