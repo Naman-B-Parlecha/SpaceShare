@@ -125,3 +125,27 @@ export const profilePost = async (req, res, next) => {
     res.status(500).json({ message: "Failed to fetch Profile Post" });
   }
 };
+
+export const getNotificationNumber = async (req, res, next) => {
+  const tokenUserid = req.userId;
+  console.log(tokenUserid);
+  try {
+    const number = await prisma.chat.count({
+      where: {
+        userIDs: {
+          hasSome: [tokenUserid],
+        },
+        NOT: {
+          seenBy: {
+            hasSome: [tokenUserid],
+          },
+        },
+      },
+    });
+    console.log("xyz= ",number)
+    res.status(200).json(number);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Failed to fetch Profile Post" });
+  }
+};
