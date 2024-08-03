@@ -6,12 +6,11 @@ function HomePage() {
     <div className="homePage">
       <div className="textContainer">
         <div className="wrapper">
-          <h1 className="title">Find Real Estate & Get Your Dream Place</h1>
+          <h1 className="title">Find Real Estate & Get Your Place</h1>
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos
-            explicabo suscipit cum eius, iure est nulla animi consequatur
-            facilis id pariatur fugit quos laudantium temporibus dolor ea
-            repellat provident impedit!
+            Use the filter below to narrow down your search and discover
+            properties that match your preferences. Simply select your desired
+            criteria and explore the best options available.
           </p>
           <SearchBar />
           <div className="boxes">
