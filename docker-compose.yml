@@ -1,0 +1,49 @@
+version: "3"
+
+services:
+  client: 
+    build: /client
+    container_name: spaceshare-client
+    ports:
+      - "5173:5173"
+    stdin_open: true
+    tty: true
+    depends_on:
+      - server
+      - socket
+    networks:
+      - spaceshare
+
+  server:
+    build: /server
+    container_name: spaceshare-server
+    restart: always 
+    env_file:
+      - /server/.env
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+    networks:
+      - spaceshare
+
+  database:
+    image: mongo
+    container_name: spaceshare-db
+    ports:
+      - "27017:27017"
+    networks:
+      - spaceshare
+
+  socket:
+    build: /socket
+    container_name: spaceshare-socket
+    ports:
+      - "4000:4000"
+    networks:
+      - spaceshare
+
+networks:
+  spaceshare:
+    driver: bridge
+
